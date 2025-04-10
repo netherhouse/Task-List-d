@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 function TaskForm() {
   return (
     <form action="" className="task-form">
@@ -27,7 +29,7 @@ function TaskItem() {
         <div>
           Title <strong>Medium</strong>
         </div>
-        <div className="task-deadline">Due: {new Date().toLocaleStringe()}</div>
+        <div className="task-deadline">Due: {new Date().toLocaleString()}</div>
       </div>
       <div className="task-buttons">
         <button className="complete-button">Complete</button>
@@ -71,25 +73,54 @@ function Footer() {
 }
 
 function App() {
+  const [openSection, setOpenSection] = useState({
+    taskList: false,
+    tasks: true,
+    completedTasks: true,
+  });
+
+  function toogleSection(section) {
+    setOpenSection((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  }
+
   return (
     <div className="app">
       <div className="task-container">
         <h1>Task list with Priority</h1>
-        <button className="close-button">+</button>
-        <TaskForm />
+        <button
+          className={`close-button ${openSection.taskList ? "open" : ""}`}
+          onClick={() => toogleSection("taskList")}
+        >
+          +
+        </button>
+        {openSection.taskList && <TaskForm />}
       </div>
       <div className="task-container">
         <h2>Tasks</h2>
-        <button className="close-button">+</button>
+        <button
+          className={`close-button ${openSection.tasks ? "open" : ""}`}
+          onClick={() => toogleSection("tasks")}
+        >
+          +
+        </button>
         <div className="sort-controls">
           <div className="sort-button">By Date</div>
           <div className="sort-button">By Priority</div>
         </div>
-        <TaskList />
+        {openSection.taskList && <TaskList />}
       </div>
       <div className="completed-task-container">
         <h2>Completed Task</h2>
-        <button className="close-button">+</button>
+        <button
+          className={`close-button ${openSection.completedTasks ? "open" : ""}`}
+          onClick={() => toogleSection("completedTasks")}
+        >
+          +
+        </button>
+        <CompletedTaskList />
       </div>
       <Footer />
     </div>
