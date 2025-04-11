@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function TaskForm({ addTask }) {
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("High");
+  const [priority, setPriority] = useState("Low");
   const [deadline, setDeadline] = useState("");
 
   function handleSubmit(e) {
@@ -14,7 +14,7 @@ function TaskForm({ addTask }) {
         deadline,
       });
       setTitle("");
-      setPriority("High");
+      setPriority("Low");
       setDeadline("");
     }
   }
@@ -113,6 +113,8 @@ function Footer() {
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [sortType, setSortType] = useState("date"); // Sort by date
+  const [sortOrder, setSortOrder] = useState("asc"); // Ascending order
   const [openSection, setOpenSection] = useState({
     taskList: true,
     tasks: true,
@@ -140,8 +142,31 @@ function App() {
     );
   }
 
-  const activeTasks = tasks.filter((task) => !task.completed);
-  const completedTasks = tasks.filter((task) => task.completed);
+  function toggleSortOrder(type) {
+    if (sortType === type) {
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      setSortType(type);
+      setSortOrder("asc");
+    }
+  }
+  const sortedTasks = [...tasks].sort((a, b) => {
+    if (sortType === "date") {
+      return sortOrder === "asc"
+        ? new Date(a.deadline) - new Date(b.deadline)
+        : new Date(b.deadline) - new Date(a.deadline);
+    }
+    if (sortType === "priority") {
+      const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+      return sortOrder === "asc"
+        ? priorityOrder[a.priority] - priorityOrder[b.priority]
+        : priorityOrder[b.priority] - priorityOrder[a.priority];
+    }
+    return 0; // Default case
+  });
+
+  const activeTasks = sortedTasks.filter((task) => !task.completed);
+  const completedTasks = sortedTasks.filter((task) => task.completed);
 
   return (
     <div className="app">
@@ -164,8 +189,19 @@ function App() {
           +
         </button>
         <div className="sort-controls">
-          <div className="sort-button">By Date</div>
-          <div className="sort-button">By Priority</div>
+          <div
+            className={`sort-button ${sortType === "date" ? "active" : ""}`}
+            onClick={() => toggleSortOrder("date")}
+          >
+            By Date {sortType === "date" && (sortOrder === "asc" ? "↑" : "↓")}
+          </div>
+          <div
+            className={`sort-button ${sortType === "priority" ? "active" : ""}`}
+            onClick={() => toggleSortOrder("priority")}
+          >
+            By Priority{" "}
+            {sortType === "priority" && (sortOrder === "asc" ? "↑" : "↓")}
+          </div>
         </div>
         {openSection.tasks && (
           <TaskList
