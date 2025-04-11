@@ -312,14 +312,48 @@ h2 {
 
 /* Footer styles */
 .footer {
-  text-align: center;
   margin-top: 30px;
-  padding: 24px;
+  padding: 32px 24px 20px;
   background-color: var(--bg-card);
   border-radius: var(--border-radius);
-  font-size: 0.9em;
   color: var(--text-secondary);
   box-shadow: var(--shadow);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.footer-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+
+.footer-section p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.footer-bottom {
+  padding-top: 20px;
+  border-top: 1px solid var(--bg-input);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.heart {
+  color: var(--danger);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 700px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Theme toggle button */
