@@ -1,4 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMoon,
+  faSun,
+  faSort,
+  faSortUp,
+  faSortDown,
+  faPlus,
+  faCheck,
+  faTrash,
+  faCalendarAlt,
+  faFlag,
+} from "@fortawesome/free-solid-svg-icons";
+import { motion, AnimatePresence } from "framer-motion";
 
 function TaskForm({ addTask }) {
   const [title, setTitle] = useState("");
@@ -20,18 +34,24 @@ function TaskForm({ addTask }) {
   }
 
   return (
-    <form action="" className="task-form" onSubmit={handleSubmit}>
+    <motion.form
+      className="task-form"
+      onSubmit={handleSubmit}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <input
         type="text"
         value={title}
-        placeholder="task title"
+        placeholder="What needs to be done?"
         required
         onChange={(e) => setTitle(e.target.value)}
       />
       <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
+        <option value="High">High Priority</option>
+        <option value="Medium">Medium Priority</option>
+        <option value="Low">Low Priority</option>
       </select>
       <input
         type="datetime-local"
@@ -39,63 +59,103 @@ function TaskForm({ addTask }) {
         value={deadline}
         onChange={(e) => setDeadline(e.target.value)}
       />
-      <button type="submit">add Task</button>
-    </form>
+      <motion.button
+        type="submit"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <FontAwesomeIcon icon={faPlus} /> Add Task
+      </motion.button>
+    </motion.form>
   );
 }
+
 function TaskList({ activeTasks, deleteTask, completeTask }) {
   return (
-    <ul className="task-list">
-      {activeTasks.map((task) => (
-        <TaskItem
-          completeTask={completeTask}
-          deleteTask={deleteTask}
-          task={task}
-          key={task.id}
-        />
-      ))}
-    </ul>
+    <motion.ul
+      className="task-list"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ staggerChildren: 0.1 }}
+    >
+      <AnimatePresence>
+        {activeTasks.map((task) => (
+          <TaskItem
+            completeTask={completeTask}
+            deleteTask={deleteTask}
+            task={task}
+            key={task.id}
+          />
+        ))}
+      </AnimatePresence>
+    </motion.ul>
   );
 }
 
 function TaskItem({ task, deleteTask, completeTask }) {
   const { title, priority, deadline, id, completed } = task;
+
   return (
-    <li className={`task-item ${priority.toLowerCase()}`}>
+    <motion.li
+      className={`task-item ${priority.toLowerCase()}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+      layout
+    >
       <div className="task-info">
         <div>
           {title} | <strong>{priority}</strong>
         </div>
         <div className="task-deadline">
-          Due: {new Date(deadline).toLocaleString()}
+          <FontAwesomeIcon icon={faCalendarAlt} />{" "}
+          {new Date(deadline).toLocaleString()}
         </div>
       </div>
       <div className="task-buttons">
         {!completed && (
-          <button className="complete-button" onClick={() => completeTask(id)}>
-            Complete
-          </button>
+          <motion.button
+            className="complete-button"
+            onClick={() => completeTask(id)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FontAwesomeIcon icon={faCheck} /> Complete
+          </motion.button>
         )}
 
-        <button className="delete-button" onClick={() => deleteTask(id)}>
-          Delete
-        </button>
+        <motion.button
+          className="delete-button"
+          onClick={() => deleteTask(id)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <FontAwesomeIcon icon={faTrash} /> Delete
+        </motion.button>
       </div>
-    </li>
+    </motion.li>
   );
 }
+
 function CompletedTaskList({ completedTasks, deleteTask }) {
   return (
-    <ul className="completed-task-list">
-      {completedTasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          deleteTask={deleteTask}
-          completeTask={() => {}} // Optional since tasks are already completed
-        />
-      ))}
-    </ul>
+    <motion.ul
+      className="completed-task-list"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ staggerChildren: 0.1 }}
+    >
+      <AnimatePresence>
+        {completedTasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            deleteTask={deleteTask}
+            completeTask={() => {}} // Optional since tasks are already completed
+          />
+        ))}
+      </AnimatePresence>
+    </motion.ul>
   );
 }
 
@@ -105,7 +165,7 @@ function Footer() {
       <p>
         Technologies and React concepts used: React, JSX, props, useState,
         component composition, conditional rendering, array methods(map,
-        filter), event handling.
+        filter), event handling, animations.
       </p>
     </footer>
   );
@@ -113,20 +173,43 @@ function Footer() {
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [sortType, setSortType] = useState("date"); // Sort by date
-  const [sortOrder, setSortOrder] = useState("asc"); // Ascending order
+  const [sortType, setSortType] = useState("date");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [openSection, setOpenSection] = useState({
     taskList: true,
     tasks: true,
     completedTasks: true,
   });
+  const [theme, setTheme] = useState("dark");
 
-  function toogleSection(section) {
+  function toggleTheme() {
+    setTheme(theme === "dark" ? "light" : "dark");
+  }
+
+  // Apply theme changes
+  useEffect(() => {
+    if (theme === "light") {
+      document.documentElement.style.setProperty("--bg-main", "#f5f5f5");
+      document.documentElement.style.setProperty("--bg-card", "#ffffff");
+      document.documentElement.style.setProperty("--bg-input", "#f0f0f0");
+      document.documentElement.style.setProperty("--text-primary", "#121212");
+      document.documentElement.style.setProperty("--text-secondary", "#555555");
+    } else {
+      document.documentElement.style.setProperty("--bg-main", "#121212");
+      document.documentElement.style.setProperty("--bg-card", "#1e1e1e");
+      document.documentElement.style.setProperty("--bg-input", "#2d2d2d");
+      document.documentElement.style.setProperty("--text-primary", "#f0f0f0");
+      document.documentElement.style.setProperty("--text-secondary", "#b0b0b0");
+    }
+  }, [theme]);
+
+  function toggleSection(section) {
     setOpenSection((prevState) => ({
       ...prevState,
       [section]: !prevState[section],
     }));
   }
+
   function addTask(task) {
     setTasks([...tasks, { ...task, completed: false, id: Date.now() }]);
   }
@@ -134,6 +217,7 @@ function App() {
   function deleteTask(id) {
     setTasks(tasks.filter((task) => task.id !== id));
   }
+
   function completeTask(id) {
     setTasks(
       tasks.map((task) =>
@@ -150,6 +234,7 @@ function App() {
       setSortOrder("asc");
     }
   }
+
   const sortedTasks = [...tasks].sort((a, b) => {
     if (sortType === "date") {
       return sortOrder === "asc"
@@ -162,7 +247,7 @@ function App() {
         ? priorityOrder[a.priority] - priorityOrder[b.priority]
         : priorityOrder[b.priority] - priorityOrder[a.priority];
     }
-    return 0; // Default case
+    return 0;
   });
 
   const activeTasks = sortedTasks.filter((task) => !task.completed);
@@ -170,61 +255,120 @@ function App() {
 
   return (
     <div className="app">
-      <div className="task-container">
-        <h1>Task list with Priority</h1>
+      <motion.button
+        className="theme-toggle"
+        onClick={toggleTheme}
+        whileHover={{ rotate: 180 }}
+        transition={{ duration: 0.3 }}
+      >
+        <FontAwesomeIcon icon={theme === "dark" ? faSun : faMoon} />
+      </motion.button>
+
+      <motion.div
+        className="task-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h1>Task Manager</h1>
         <button
           className={`close-button ${openSection.taskList ? "open" : ""}`}
-          onClick={() => toogleSection("taskList")}
+          onClick={() => toggleSection("taskList")}
         >
           +
         </button>
-        {openSection.taskList && <TaskForm addTask={addTask} />}
-      </div>
-      <div className="task-container">
-        <h2>Tasks</h2>
+        <AnimatePresence>
+          {openSection.taskList && <TaskForm addTask={addTask} />}
+        </AnimatePresence>
+      </motion.div>
+
+      <motion.div
+        className="task-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <h2>Active Tasks</h2>
         <button
           className={`close-button ${openSection.tasks ? "open" : ""}`}
-          onClick={() => toogleSection("tasks")}
-        >
-          +
-        </button>
-        <div className="sort-controls">
-          <div
-            className={`sort-button ${sortType === "date" ? "active" : ""}`}
-            onClick={() => toggleSortOrder("date")}
-          >
-            By Date {sortType === "date" && (sortOrder === "asc" ? "↑" : "↓")}
-          </div>
-          <div
-            className={`sort-button ${sortType === "priority" ? "active" : ""}`}
-            onClick={() => toggleSortOrder("priority")}
-          >
-            By Priority{" "}
-            {sortType === "priority" && (sortOrder === "asc" ? "↑" : "↓")}
-          </div>
-        </div>
-        {openSection.tasks && (
-          <TaskList
-            completeTask={completeTask}
-            deleteTask={deleteTask}
-            activeTasks={activeTasks}
-          />
-        )}
-      </div>
-      <div className="completed-task-container">
-        <h2>Completed Task</h2>
-        <button
-          className={`close-button ${openSection.completedTasks ? "open" : ""}`}
-          onClick={() => toogleSection("completedTasks")}
+          onClick={() => toggleSection("tasks")}
         >
           +
         </button>
 
-        <CompletedTaskList
-          completedTasks={completedTasks}
-          deleteTask={deleteTask}
-        />
-      </div>
+        <div className="sort-controls">
+          <motion.div
+            className={`sort-button ${sortType === "date" ? "active" : ""}`}
+            onClick={() => toggleSortOrder("date")}
+            whileHover={{ y: -3 }}
+            whileTap={{ y: 0 }}
+          >
+            <FontAwesomeIcon
+              icon={
+                sortType === "date"
+                  ? sortOrder === "asc"
+                    ? faSortUp
+                    : faSortDown
+                  : faSort
+              }
+            />
+            By Date
+          </motion.div>
+
+          <motion.div
+            className={`sort-button ${sortType === "priority" ? "active" : ""}`}
+            onClick={() => toggleSortOrder("priority")}
+            whileHover={{ y: -3 }}
+            whileTap={{ y: 0 }}
+          >
+            <FontAwesomeIcon
+              icon={
+                sortType === "priority"
+                  ? sortOrder === "asc"
+                    ? faSortUp
+                    : faSortDown
+                  : faSort
+              }
+            />
+            By Priority
+          </motion.div>
+        </div>
+
+        <AnimatePresence>
+          {openSection.tasks && (
+            <TaskList
+              completeTask={completeTask}
+              deleteTask={deleteTask}
+              activeTasks={activeTasks}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      <motion.div
+        className="completed-task-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+      >
+        <h2>Completed Tasks</h2>
+        <button
+          className={`close-button ${openSection.completedTasks ? "open" : ""}`}
+          onClick={() => toggleSection("completedTasks")}
+        >
+          +
+        </button>
+
+        <AnimatePresence>
+          {openSection.completedTasks && (
+            <CompletedTaskList
+              completedTasks={completedTasks}
+              deleteTask={deleteTask}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
+
       <Footer />
     </div>
   );
