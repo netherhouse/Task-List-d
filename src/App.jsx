@@ -59,7 +59,7 @@ function TaskList({ activeTasks, deleteTask, completeTask }) {
 }
 
 function TaskItem({ task, deleteTask, completeTask }) {
-  const { title, priority, deadline, id } = task;
+  const { title, priority, deadline, id, completed } = task;
   return (
     <li className={`task-item ${priority.toLowerCase()}`}>
       <div className="task-info">
@@ -71,9 +71,12 @@ function TaskItem({ task, deleteTask, completeTask }) {
         </div>
       </div>
       <div className="task-buttons">
-        <button className="complete-button" onClick={() => completeTask(id)}>
-          Complete
-        </button>
+        {completed && (
+          <button className="complete-button" onClick={() => completeTask(id)}>
+            Complete
+          </button>
+        )}
+
         <button className="delete-button" onClick={() => deleteTask(id)}>
           Delete
         </button>
