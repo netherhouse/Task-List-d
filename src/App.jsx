@@ -1,15 +1,44 @@
 import { useState } from "react";
 
-function TaskForm() {
+function TaskForm({ addTask }) {
+  const [title, setTitle] = useState("");
+  const [priority, setPriority] = useState("High");
+  const [deadline, setDeadline] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (title.trim() && deadline) {
+      addTask({
+        title,
+        priority,
+        deadline,
+      });
+      setTitle("");
+      setPriority("High");
+      setDeadline("");
+    }
+  }
+
   return (
-    <form action="" className="task-form">
-      <input type="text" value={""} placeholder="task title" required />
-      <select value="">
+    <form action="" className="task-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        placeholder="task title"
+        required
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
       </select>
-      <input type="datetime-local" required value="" />
+      <input
+        type="datetime-local"
+        required
+        value={deadline}
+        onChange={(e) => setDeadline(e.target.value)}
+      />
       <button type="submit">add Task</button>
     </form>
   );
@@ -52,7 +81,7 @@ function CompletedTaskItem() {
         <div>
           Title <strong>Medium</strong>
         </div>
-        <div className="task-deadline">Due: {new Date().toLocaleStringe()}</div>
+        <div className="task-deadline">Due: {new Date().toLocaleString()}</div>
       </div>
       <div className="task-buttons">
         <button className="delete-button">Delete</button>
@@ -73,8 +102,9 @@ function Footer() {
 }
 
 function App() {
+  const [tasks, setTasks] = useState([]);
   const [openSection, setOpenSection] = useState({
-    taskList: false,
+    taskList: true,
     tasks: true,
     completedTasks: true,
   });
@@ -84,6 +114,9 @@ function App() {
       ...prevState,
       [section]: !prevState[section],
     }));
+  }
+  function addTask(task) {
+    setTasks([...tasks, { ...task, completed: false, id: Date.now() }]);
   }
 
   return (
@@ -96,7 +129,7 @@ function App() {
         >
           +
         </button>
-        {openSection.taskList && <TaskForm />}
+        {openSection.taskList && <TaskForm addTask={addTask} />}
       </div>
       <div className="task-container">
         <h2>Tasks</h2>
@@ -110,7 +143,7 @@ function App() {
           <div className="sort-button">By Date</div>
           <div className="sort-button">By Priority</div>
         </div>
-        {openSection.taskList && <TaskList />}
+        {openSection.tasks && <TaskList />}
       </div>
       <div className="completed-task-container">
         <h2>Completed Task</h2>
