@@ -189,17 +189,23 @@ function App() {
   // Apply theme changes
   useEffect(() => {
     if (theme === "light") {
-      document.documentElement.style.setProperty("--bg-main", "#f5f5f5");
+      document.documentElement.style.setProperty("--bg-main", "#f9f5f0");
       document.documentElement.style.setProperty("--bg-card", "#ffffff");
-      document.documentElement.style.setProperty("--bg-input", "#f0f0f0");
-      document.documentElement.style.setProperty("--text-primary", "#121212");
-      document.documentElement.style.setProperty("--text-secondary", "#555555");
+      document.documentElement.style.setProperty("--bg-input", "#f2ece3");
+      document.documentElement.style.setProperty("--text-primary", "#2d2d2d");
+      document.documentElement.style.setProperty("--text-secondary", "#605c55");
+      document.documentElement.style.setProperty("--accent", "#FE8900");
+      document.documentElement.style.setProperty("--accent-hover", "#E67A00");
     } else {
-      document.documentElement.style.setProperty("--bg-main", "#121212");
-      document.documentElement.style.setProperty("--bg-card", "#1e1e1e");
-      document.documentElement.style.setProperty("--bg-input", "#2d2d2d");
-      document.documentElement.style.setProperty("--text-primary", "#f0f0f0");
-      document.documentElement.style.setProperty("--text-secondary", "#b0b0b0");
+      document.documentElement.style.setProperty("--bg-main", "#1a1a1c");
+      document.documentElement.style.setProperty("--bg-card", "#252528");
+      document.documentElement.style.setProperty("--bg-input", "#35353a");
+      document.documentElement.style.setProperty("--text-primary", "#f8f8f0");
+      document.documentElement.style.setProperty("--text-secondary", "#c5c5b8");
+      document.documentElement.style.setProperty("--accent", "#FE8900");
+      document.documentElement.style.setProperty("--accent-hover", "#FF9D2E");
+      document.documentElement.style.setProperty("--danger", "#FF4A4A");
+      document.documentElement.style.setProperty("--success", "#00D68F");
     }
   }, [theme]);
 

@@ -1,16 +1,16 @@
 :root {
   /* Dark theme (default) */
-  --bg-main: #121212;
-  --bg-card: #1e1e1e;
-  --bg-input: #2d2d2d;
-  --text-primary: #f0f0f0;
-  --text-secondary: #b0b0b0;
-  --accent: #ff7700;
-  --accent-hover: #ff9040;
-  --danger: #ff4545;
-  --success: #00c853;
+  --bg-main: #1a1a1c;
+  --bg-card: #252528;
+  --bg-input: #35353a;
+  --text-primary: #f8f8f0;
+  --text-secondary: #c5c5b8;
+  --accent: #fe8900;
+  --accent-hover: #ff9d2e;
+  --danger: #ff4a4a;
+  --success: #00d68f;
   --border-radius: 12px;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -236,15 +236,15 @@ h2 {
 }
 
 .task-item.high {
-  border-left-color: var(--danger);
+  border-left-color: var(--danger); /* #e55c3c */
 }
 
 .task-item.medium {
-  border-left-color: var(--accent);
+  border-left-color: var(--accent); /* #ffb200 */
 }
 
 .task-item.low {
-  border-left-color: var(--success);
+  border-left-color: var(--success); /* #26c99e */
 }
 
 .task-item:hover {
