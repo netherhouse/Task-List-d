@@ -71,7 +71,7 @@ function TaskItem({ task, deleteTask, completeTask }) {
         </div>
       </div>
       <div className="task-buttons">
-        {completed && (
+        {!completed && (
           <button className="complete-button" onClick={() => completeTask(id)}>
             Complete
           </button>
@@ -219,12 +219,11 @@ function App() {
         >
           +
         </button>
-        {openSection.completedTasks && (
-          <CompletedTaskList
-            completedTasks={completedTasks}
-            deleteTask={deleteTask}
-          />
-        )}
+
+        <CompletedTaskList
+          completedTasks={completedTasks}
+          deleteTask={deleteTask}
+        />
       </div>
       <Footer />
     </div>
