@@ -43,52 +43,59 @@ function TaskForm({ addTask }) {
     </form>
   );
 }
-function TaskList() {
+function TaskList({ activeTasks, deleteTask, completeTask }) {
   return (
     <ul className="task-list">
-      <TaskItem />
+      {activeTasks.map((task) => (
+        <TaskItem
+          completeTask={completeTask}
+          deleteTask={deleteTask}
+          task={task}
+          key={task.id}
+        />
+      ))}
     </ul>
   );
 }
 
-function TaskItem() {
+function TaskItem({ task, deleteTask, completeTask }) {
+  const { title, priority, deadline, id } = task;
   return (
-    <li className="task-item">
+    <li className={`task-item ${priority.toLowerCase()}`}>
       <div className="task-info">
         <div>
-          Title <strong>Medium</strong>
+          {title} | <strong>{priority}</strong>
         </div>
-        <div className="task-deadline">Due: {new Date().toLocaleString()}</div>
+        <div className="task-deadline">
+          Due: {new Date(deadline).toLocaleString()}
+        </div>
       </div>
       <div className="task-buttons">
-        <button className="complete-button">Complete</button>
-        <button className="delete-button">Delete</button>
+        <button className="complete-button" onClick={() => completeTask(id)}>
+          Complete
+        </button>
+        <button className="delete-button" onClick={() => deleteTask(id)}>
+          Delete
+        </button>
       </div>
     </li>
   );
 }
-function CompletedTaskList() {
+function CompletedTaskList({ completedTasks, deleteTask }) {
   return (
     <ul className="completed-task-list">
-      <CompletedTaskItem />
+      {completedTasks.map((task) => (
+        <TaskItem
+          key={task.id}
+          task={task}
+          deleteTask={deleteTask}
+          completeTask={() => {}} // Optional since tasks are already completed
+        />
+      ))}
     </ul>
   );
 }
-function CompletedTaskItem() {
-  return (
-    <li className="completed-task-item">
-      <div className="task-info">
-        <div>
-          Title <strong>Medium</strong>
-        </div>
-        <div className="task-deadline">Due: {new Date().toLocaleString()}</div>
-      </div>
-      <div className="task-buttons">
-        <button className="delete-button">Delete</button>
-      </div>
-    </li>
-  );
-}
+
 function Footer() {
   return (
     <footer className="footer">
@@ -119,6 +126,20 @@ function App() {
     setTasks([...tasks, { ...task, completed: false, id: Date.now() }]);
   }
 
+  function deleteTask(id) {
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
+  function completeTask(id) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: true } : task
+      )
+    );
+  }
+
+  const activeTasks = tasks.filter((task) => !task.completed);
+  const completedTasks = tasks.filter((task) => task.completed);
+
   return (
     <div className="app">
       <div className="task-container">
@@ -143,7 +164,13 @@ function App() {
           <div className="sort-button">By Date</div>
           <div className="sort-button">By Priority</div>
         </div>
-        {openSection.tasks && <TaskList />}
+        {openSection.tasks && (
+          <TaskList
+            completeTask={completeTask}
+            deleteTask={deleteTask}
+            activeTasks={activeTasks}
+          />
+        )}
       </div>
       <div className="completed-task-container">
         <h2>Completed Task</h2>
@@ -153,7 +180,12 @@ function App() {
         >
           +
         </button>
-        <CompletedTaskList />
+        {openSection.completedTasks && (
+          <CompletedTaskList
+            completedTasks={completedTasks}
+            deleteTask={deleteTask}
+          />
+        )}
       </div>
       <Footer />
     </div>
