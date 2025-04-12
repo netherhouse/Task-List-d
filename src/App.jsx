@@ -1,204 +1,11 @@
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMoon,
-  faSun,
-  faSort,
-  faSortUp,
-  faSortDown,
-  faPlus,
-  faCheck,
-  faTrash,
-  faCalendarAlt,
-  faFlag,
-} from "@fortawesome/free-solid-svg-icons";
-import { motion, AnimatePresence } from "framer-motion";
-
-function TaskForm({ addTask }) {
-  const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("Low");
-  const [deadline, setDeadline] = useState("");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (title.trim() && deadline) {
-      addTask({
-        title,
-        priority,
-        deadline,
-      });
-      setTitle("");
-      setPriority("Low");
-      setDeadline("");
-    }
-  }
-
-  return (
-    <motion.form
-      className="task-form"
-      onSubmit={handleSubmit}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <input
-        type="text"
-        value={title}
-        placeholder="What needs to be done?"
-        required
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-        <option value="High">High Priority</option>
-        <option value="Medium">Medium Priority</option>
-        <option value="Low">Low Priority</option>
-      </select>
-      <input
-        type="datetime-local"
-        required
-        value={deadline}
-        onChange={(e) => setDeadline(e.target.value)}
-      />
-      <motion.button
-        type="submit"
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-      >
-        <FontAwesomeIcon icon={faPlus} /> Add Task
-      </motion.button>
-    </motion.form>
-  );
-}
-
-function TaskList({ activeTasks, deleteTask, completeTask }) {
-  return (
-    <motion.ul
-      className="task-list"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ staggerChildren: 0.1 }}
-    >
-      <AnimatePresence>
-        {activeTasks.map((task) => (
-          <TaskItem
-            completeTask={completeTask}
-            deleteTask={deleteTask}
-            task={task}
-            key={task.id}
-          />
-        ))}
-      </AnimatePresence>
-    </motion.ul>
-  );
-}
-
-function TaskItem({ task, deleteTask, completeTask }) {
-  const { title, priority, deadline, id, completed } = task;
-
-  return (
-    <motion.li
-      className={`task-item ${priority.toLowerCase()}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-      layout
-    >
-      <div className="task-info">
-        <div>
-          {title} | <strong>{priority}</strong>
-        </div>
-        <div className="task-deadline">
-          <FontAwesomeIcon icon={faCalendarAlt} />{" "}
-          {new Date(deadline).toLocaleString()}
-        </div>
-      </div>
-      <div className="task-buttons">
-        {!completed && (
-          <motion.button
-            className="complete-button"
-            onClick={() => completeTask(id)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FontAwesomeIcon icon={faCheck} /> Complete
-          </motion.button>
-        )}
-
-        <motion.button
-          className="delete-button"
-          onClick={() => deleteTask(id)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FontAwesomeIcon icon={faTrash} /> Delete
-        </motion.button>
-      </div>
-    </motion.li>
-  );
-}
-
-function CompletedTaskList({ completedTasks, deleteTask }) {
-  return (
-    <motion.ul
-      className="completed-task-list"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ staggerChildren: 0.1 }}
-    >
-      <AnimatePresence>
-        {completedTasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            deleteTask={deleteTask}
-            completeTask={() => {}} // Optional since tasks are already completed
-          />
-        ))}
-      </AnimatePresence>
-    </motion.ul>
-  );
-}
-
-function Footer() {
-  const currentYear = new Date().getFullYear();
-
-  return (
-    <motion.footer
-      className="footer"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5 }}
-    >
-      <div className="footer-content">
-        <div className="footer-section">
-          <h3>About This App</h3>
-          <p>
-            This Task Manager is a React-based application for managing daily
-            tasks with priority levels and deadline tracking. The minimalist
-            interface makes it easy to focus on what matters.
-          </p>
-        </div>
-
-        <div className="footer-section">
-          <h3>Tech Stack</h3>
-          <p>
-            Built with React, Framer Motion for animations, FontAwesome for
-            icons, CSS variables for theming, and modern JavaScript features.
-          </p>
-        </div>
-
-        <div className="footer-section">
-          <h3>Concepts Used</h3>
-          <p>
-            React hooks (useState, useEffect), component composition,
-            conditional rendering, array methods, event handling, animations,
-            theme switching, and responsive design.
-          </p>
-        </div>
-      </div>
-    </motion.footer>
-  );
-}
+import { AnimatePresence, motion } from "framer-motion";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
+import CompletedTaskList from "./components/CompletedTaskList";
+import SortControls from "./components/SortControls";
+import ThemeToggle from "./components/ThemeToggle";
+import Footer from "./components/Footer";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -215,7 +22,6 @@ function App() {
     setTheme(theme === "dark" ? "light" : "dark");
   }
 
-  // Apply theme changes
   useEffect(() => {
     if (theme === "light") {
       document.documentElement.style.setProperty("--bg-main", "#f9f5f0");
@@ -290,14 +96,7 @@ function App() {
 
   return (
     <div className="app">
-      <motion.button
-        className="theme-toggle"
-        onClick={toggleTheme}
-        whileHover={{ rotate: 180 }}
-        transition={{ duration: 0.3 }}
-      >
-        <FontAwesomeIcon icon={theme === "dark" ? faSun : faMoon} />
-      </motion.button>
+      <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
 
       <motion.div
         className="task-container"
@@ -331,43 +130,11 @@ function App() {
           +
         </button>
 
-        <div className="sort-controls">
-          <motion.div
-            className={`sort-button ${sortType === "date" ? "active" : ""}`}
-            onClick={() => toggleSortOrder("date")}
-            whileHover={{ y: -3 }}
-            whileTap={{ y: 0 }}
-          >
-            <FontAwesomeIcon
-              icon={
-                sortType === "date"
-                  ? sortOrder === "asc"
-                    ? faSortUp
-                    : faSortDown
-                  : faSort
-              }
-            />
-            By Date
-          </motion.div>
-
-          <motion.div
-            className={`sort-button ${sortType === "priority" ? "active" : ""}`}
-            onClick={() => toggleSortOrder("priority")}
-            whileHover={{ y: -3 }}
-            whileTap={{ y: 0 }}
-          >
-            <FontAwesomeIcon
-              icon={
-                sortType === "priority"
-                  ? sortOrder === "asc"
-                    ? faSortUp
-                    : faSortDown
-                  : faSort
-              }
-            />
-            By Priority
-          </motion.div>
-        </div>
+        <SortControls
+          sortType={sortType}
+          sortOrder={sortOrder}
+          toggleSortOrder={toggleSortOrder}
+        />
 
         <AnimatePresence>
           {openSection.tasks && (
