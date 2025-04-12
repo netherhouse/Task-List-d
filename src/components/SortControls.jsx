@@ -1,3 +1,11 @@
+/*
+  [RU] Компонент SortControls отвечает за отображение кнопок сортировки задач.
+  Он позволяет сортировать задачи по дате или по приоритету и визуально показывает активный метод сортировки.
+  
+  [EN] The SortControls component is responsible for displaying sort buttons for tasks.
+  It enables users to sort tasks by date or priority and visually indicates the active sorting method.
+*/
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,

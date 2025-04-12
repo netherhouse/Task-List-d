@@ -1,3 +1,11 @@
+/*
+  [RU] Компонент TaskList отвечает за отображение списка активных (незавершённых) задач.
+  Он использует компонент TaskItem для рендеринга каждой задачи и анимирует появление отдельных элементов списка.
+  
+  [EN] The TaskList component is responsible for displaying a list of active (incomplete) tasks.
+  It utilizes the TaskItem component to render each task and animates the appearance of list items.
+*/
+
 import { motion, AnimatePresence } from "framer-motion";
 import TaskItem from "./TaskItem";
 

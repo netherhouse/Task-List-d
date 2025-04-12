@@ -1,3 +1,11 @@
+/*
+  [RU] Компонент Footer отображает нижнюю часть приложения с информацией о нем.
+  Здесь приводятся данные о целях, используемых технологиях и основных концепциях приложения.
+  
+  [EN] The Footer component renders the bottom section of the application which contains information about it.
+  It includes details about the app’s purpose, the tech stack used, and key concepts implemented.
+*/
+
 import { motion } from "framer-motion";
 
 function Footer() {
@@ -17,7 +25,6 @@ function Footer() {
             interface makes it easy to focus on what matters.
           </p>
         </div>
-
         <div className="footer-section">
           <h3>Tech Stack</h3>
           <p>
@@ -25,7 +32,6 @@ function Footer() {
             icons, CSS variables for theming, and modern JavaScript features.
           </p>
         </div>
-
         <div className="footer-section">
           <h3>Concepts Used</h3>
           <p>

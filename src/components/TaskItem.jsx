@@ -1,3 +1,12 @@
+/*
+  [RU] Компонент TaskItem отвечает за отображение одной задачи со всей её информацией и кнопками действий.
+  Он показывает заголовок, приоритет, дату дедлайна и предоставляет кнопки для отметки задачи как выполненной
+  и для её удаления.
+  
+  [EN] The TaskItem component is responsible for displaying a single task with its information and action buttons.
+  It shows the task title, priority, and deadline while providing buttons to mark the task as completed and to delete it.
+*/
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -37,7 +46,6 @@ function TaskItem({ task, deleteTask, completeTask }) {
             <FontAwesomeIcon icon={faCheck} /> Complete
           </motion.button>
         )}
-
         <motion.button
           className="delete-button"
           onClick={() => deleteTask(id)}

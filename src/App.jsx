@@ -1,3 +1,15 @@
+/*
+  [RU] Компонент App является главным компонентом приложения. Он объединяет все дочерние компоненты:
+  форму добавления задачи (TaskForm), списки активных и завершенных задач (TaskList и CompletedTaskList),
+  элементы управления сортировкой (SortControls), переключатель темы (ThemeToggle) и футер (Footer).
+  Логика управления состоянием задач, сортировки и отображения секций также содержится здесь.
+  
+  [EN] The App component is the main container of the application. It integrates all child components:
+  the task form (TaskForm), lists of active and completed tasks (TaskList and CompletedTaskList),
+  sort controls (SortControls), theme toggle (ThemeToggle), and footer (Footer).
+  It also handles the state management for tasks, sorting, and section visibility.
+*/
+
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import TaskForm from "./components/TaskForm";
@@ -129,13 +141,11 @@ function App() {
         >
           +
         </button>
-
         <SortControls
           sortType={sortType}
           sortOrder={sortOrder}
           toggleSortOrder={toggleSortOrder}
         />
-
         <AnimatePresence>
           {openSection.tasks && (
             <TaskList
@@ -160,7 +170,6 @@ function App() {
         >
           +
         </button>
-
         <AnimatePresence>
           {openSection.completedTasks && (
             <CompletedTaskList

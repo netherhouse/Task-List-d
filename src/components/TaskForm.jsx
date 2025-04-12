@@ -1,3 +1,14 @@
+/*
+  [RU] Компонент TaskForm отвечает за отображение формы для добавления новой задачи.
+  Этот компонент принимает функцию addTask как prop и содержит локальное состояние для управления
+  значениями заголовка, приоритета и дедлайна задачи. При отправке формы происходит валидация введенных данных,
+  после чего вызывается функция addTask с данными новой задачи.
+  
+  [EN] The TaskForm component is responsible for rendering a form to add a new task.
+  It receives an addTask function as a prop and maintains local state for handling the task title,
+  priority, and deadline. On form submission, it validates the input and calls the addTask function with the new task data.
+*/
+
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
